@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ServiceHub</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/3.5.0/remixicon.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!--Navbar-->
+  <nav class="gsap-navbar">
+    <div class="brand">ServiceHub</div>
+    <div class="hamburger" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html" class="active">About</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+  
+
+  
+    <div class="hero-container">
+        <!-- 3D Cityscape Layers -->
+        <div class="cityscape">
+            <div class="city-layer layer-1"></div>
+            <div class="city-layer layer-2"></div>
+            <div class="city-layer layer-3"></div>
+        </div>
+
+        <!-- Floating Service Icons -->
+        <div class="service-icons">
+            <div class="service-icon icon-plumber" data-service="plumber">🔧</div>
+            <div class="service-icon icon-electrician" data-service="electrician">⚡</div>
+            <div class="service-icon icon-painter" data-service="painter">🎨</div>
+            <div class="service-icon icon-cleaner" data-service="cleaner">🧽</div>
+            <div class="service-icon icon-carpenter" data-service="carpenter">🔨</div>
+            <div class="service-icon icon-gardener" data-service="gardener">🌱</div>
+        </div>
+
+        <!-- Hero Content -->
+        <div class="hero-content">
+            <h1 class="hero-title">
+                <span class="title-word">
+                    <span class="title-letter">F</span>
+                    <span class="title-letter">i</span>
+                    <span class="title-letter">n</span>
+                    <span class="title-letter">d</span>
+                </span>
+                <span class="title-word">
+                    <span class="title-letter">Y</span>
+                    <span class="title-letter">o</span>
+                    <span class="title-letter">u</span>
+                    <span class="title-letter">r</span>
+                </span>
+                <span class="title-word">
+                    <span class="title-letter">P</span>
+                    <span class="title-letter">e</span>
+                    <span class="title-letter">r</span>
+                    <span class="title-letter">f</span>
+                    <span class="title-letter">e</span>
+                    <span class="title-letter">c</span>
+                    <span class="title-letter">t</span>
+                </span>
+                <span class="title-word">
+                    <span class="title-letter">P</span>
+                    <span class="title-letter">r</span>
+                    <span class="title-letter">o</span>
+                </span>
+            </h1>
+            <p class="hero-subtitle">Professional home services at your fingertips</p>
+            <form action="search.html">
+            <div class="search-container">
+                <input type="text" class="search-bar" placeholder="What service do you need? (cleaner, electrician,  plumber...)">
+                <button class="search-btn">Search</button>
+            </div>
+        </form>
+        </div>
+    </div>
+
+    <!-- Content section for scroll trigger -->
+    <div class="content-section">
+        <h2>Trusted Home Services</h2>
+        <p>Connect with verified professionals in your area. From emergency repairs to routine maintenance, we've got you covered with quality service providers who are background-checked and customer-rated.</p>
+        <p>Our platform makes it easy to book appointments, track service progress, and ensure complete satisfaction with every job. Experience the future of home services today.</p>
+    </div>
+  
+    <section class="services" id="services">
+      <h2 class="section-title">Popular Services</h2>
+      <div class="filter-buttons">
+          <button class="filter active" data-filter="all">All Services</button>
+          <button class="filter" data-filter="home">Home Services</button>
+          <button class="filter" data-filter="auto">Automotive</button>
+          <button class="filter" data-filter="tech">Technology</button>
+      </div>
+      <div class="services-grid">
+          <div class="service-card home loading" tabindex="0">
+              <i class="ri-tools-fill icon"></i>
+              <h3>Plumber</h3>
+              <p>Professional plumbing services including leak repairs, pipe installations, and emergency fixes.</p>
+          </div>
+          <div class="service-card home loading" tabindex="0">
+              <i class="ri-flashlight-fill icon"></i>
+              <h3>Electrician</h3>
+              <p>Expert electrical work covering wiring, lighting installations, circuit repairs, and safety inspections.</p>
+          </div>
+          <div class="service-card home loading" tabindex="0">
+              <i class="ri-home-gear-fill icon"></i>
+              <h3>House Cleaner</h3>
+              <p>Comprehensive cleaning services for homes and offices including deep cleaning and maintenance.</p>
+          </div>
+          <div class="service-card auto loading" tabindex="0">
+              <i class="ri-car-fill icon"></i>
+              <h3>Auto Mechanic</h3>
+              <p>Complete automotive repair and maintenance services for all vehicle makes and models.</p>
+          </div>
+          <div class="service-card tech loading" tabindex="0">
+              <i class="ri-computer-line icon"></i>
+              <h3>Laptop Repair</h3>
+              <p>Hardware and software repair services including virus removal and performance optimization.</p>
+          </div>
+          <div class="service-card tech loading" tabindex="0">
+              <i class="ri-smartphone-line icon"></i>
+              <h3>Mobile Repair</h3>
+              <p>Smartphone repair services covering screen replacement, battery issues, and software problems.</p>
+          </div>
+      </div>
+  </section>
+<center>
+  <section class="cta-section" id="cta" role="region" aria-labelledby="cta-title">
+    <h2 class="section-title" id="cta-title">Get Started Today</h2>
+    <p class="section-subtitle">Connect with trusted professionals or grow your business in our thriving marketplace</p>
+    
+    <div class="cta-cards" role="group" aria-label="Service options">
+        <div class="cta-card" id="customerCard" tabindex="0" role="button" aria-label="Find services as a customer">
+            <i class="ri-user-fill icon" aria-hidden="true"></i>
+            <h3>I'm a Customer</h3>
+            <p>Need a plumber, electrician, or any local help? Find top-rated professionals near you in minutes.</p>
+            <button class="cta-btn" id="customerBtn" aria-describedby="customer-description">
+                Find Services
+            </button>
+            <div id="customer-description" class="sr-only">Browse and connect with verified service providers in your area</div>
+        </div>
+        
+        <div class="cta-card" id="providerCard" tabindex="0" role="button" aria-label="Join as a service provider">
+            <i class="ri-tools-fill icon" aria-hidden="true"></i>
+            <h3>I'm a Service Provider</h3>
+            <p>Offer your skills and grow your business by connecting with customers who need your expertise.</p>
+            <button class="cta-btn" id="providerBtn" aria-describedby="provider-description">
+                Join as Provider
+            </button>
+            <div id="provider-description" class="sr-only">Register your business and start receiving customer requests</div>
+        </div>
+    </div>
+</section>
+
+<!-- Screen reader only content -->
+<div class="sr-only">
+</center>
+<section class="testimonials" id="testimonials">
+  <!-- Floating decorative elements -->
+  <div class="floating-elements">
+    <div class="floating-star" style="top: 10%; left: 15%;">⭐</div>
+    <div class="floating-star" style="top: 20%; right: 10%; animation-delay: -2s;">✨</div>
+    <div class="floating-star" style="top: 60%; left: 5%; animation-delay: -4s;">⭐</div>
+    <div class="floating-star" style="bottom: 30%; right: 20%; animation-delay: -1s;">✨</div>
+    <div class="floating-star" style="bottom: 10%; left: 30%; animation-delay: -3s;">⭐</div>
+  </div>
+
+  <h2 class="section-title">What People Are Saying</h2>
+  <p class="section-subtitle">Join thousands of satisfied customers and service providers who trust our platform</p>
+
+  <div class="testimonial-grid">
+    <div class="testimonial-card" tabindex="0">
+      <div class="avatar-container">
+        <div class="avatar-glow"></div>
+        <img src="https://i.pravatar.cc/100?img=1" alt="Ravi S. - Customer" class="avatar">
+      </div>
+      <h3>Ravi S.</h3>
+      <div class="role">Home Owner</div>
+      <div class="stars">
+        <span class="star">⭐</span>
+        <span class="star">⭐</span>
+        <span class="star">⭐</span>
+        <span class="star">⭐</span>
+        <span class="star">⭐</span>
+      </div>
+      <p>Booked an electrician in 5 minutes. The platform is incredibly user-friendly and the service was lightning fast. Highly recommended!</p>
+    </div>
+
+    <div class="testimonial-card" tabindex="0">
+      <div class="avatar-container">
+        <div class="avatar-glow"></div>
+        <img src="https://i.pravatar.cc/100?img=2" alt="Neha P. - Service Provider" class="avatar">
+      </div>
+      <h3>Neha P.</h3>
+      <div class="role">Plumbing Contractor</div>
+      <div class="stars">
+        <span class="star">⭐</span>
+        <span class="star">⭐</span>
+        <span class="star">⭐</span>
+        <span class="star">⭐</span>
+        <span class="star">⭐</span>
+      </div>
+      <p>Got more leads in a week than the whole last month. This platform has transformed my business completely. Love the professional approach!</p>
+    </div>
+
+    <div class="testimonial-card" tabindex="0">
+      <div class="avatar-container">
+        <div class="avatar-glow"></div>
+        <img src="https://i.pravatar.cc/100?img=3" alt="Aman K. - Customer" class="avatar">
+      </div>
+      <h3>Aman K.</h3>
+      <div class="role">Business Owner</div>
+      <div class="stars">
+        <span class="star">⭐</span>
+        <span class="star">⭐</span>
+        <span class="star">⭐</span>
+        <span class="star">⭐</span>
+        <span class="star">⭐</span>
+      </div>
+      <p>The UI is absolutely beautiful and the user experience is super smooth. Found exactly what I needed without any hassle. Outstanding platform!</p>
+    </div>
+
+    <div class="testimonial-card" tabindex="0">
+      <div class="avatar-container">
+        <div class="avatar-glow"></div>
+        <img src="https://i.pravatar.cc/100?img=4" alt="Priya M. - Service Provider" class="avatar">
+      </div>
+      <h3>Priya M.</h3>
+      <div class="role">Interior Designer</div>
+      <div class="stars">
+        <span class="star">⭐</span>
+        <span class="star">⭐</span>
+        <span class="star">⭐</span>
+        <span class="star">⭐</span>
+        <span class="star">⭐</span>
+      </div>
+      <p>Amazing platform for connecting with clients. The booking system is seamless and payments are always on time. Couldn't ask for more!</p>
+    </div>
+
+    <div class="testimonial-card" tabindex="0">
+      <div class="avatar-container">
+        <div class="avatar-glow"></div>
+        <img src="https://i.pravatar.cc/100?img=5" alt="Vikram J. - Customer" class="avatar">
+      </div>
+      <h3>Vikram J.</h3>
+      <div class="role">Software Engineer</div>
+      <div class="stars">
+        <span class="star">⭐</span>
+        <span class="star">⭐</span>
+        <span class="star">⭐</span>
+        <span class="star">⭐</span>
+        <span class="star">⭐</span>
+      </div>
+      <p>Professional service providers, transparent pricing, and excellent customer support. This is how all service platforms should work!</p>
+    </div>
+
+    <div class="testimonial-card" tabindex="0">
+      <div class="avatar-container">
+        <div class="avatar-glow"></div>
+        <img src="https://i.pravatar.cc/100?img=6" alt="Sunita R. - Service Provider" class="avatar">
+      </div>
+      <h3>Sunita R.</h3>
+      <div class="role">Cleaning Service</div>
+      <div class="stars">
+        <span class="star">⭐</span>
+        <span class="star">⭐</span>
+        <span class="star">⭐</span>
+        <span class="star">⭐</span>
+        <span class="star">⭐</span>
+      </div>
+      <p>The best decision I made for my business. Regular bookings, verified customers, and a platform that actually cares about service providers!</p>
+    </div>
+  </div>
+
+  <!-- Statistics Section -->
+  <div class="stats-section">
+    <div class="stat-item">
+      <span class="stat-number" data-target="50000">0</span>
+      <span class="stat-label">Happy Customers</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-number" data-target="15000">0</span>
+      <span class="stat-label">Service Providers</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-number" data-target="98">0</span>
+      <span class="stat-label">% Satisfaction</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-number" data-target="1000000">0</span>
+      <span class="stat-label">Services Completed</span>
+    </div>
+  </div>
+</section>
+
+<!-- Footer Section -->
+<footer id="animatedFooter">
+    <div class="footer-container">
+      <h2 class="footer-logo">ServiceHub</h2>
+      <p class="tagline">Connecting You to Trusted Local Experts</p>
+      
+      <div class="social-icons">
+        <a href="#"><i class="ri-linkedin-fill"></i></a>
+        <a href="#"><i class="ri-instagram-line"></i></a>
+        <a href="#"><i class="ri-whatsapp-line"></i></a>
+      </div>
+  
+      <div class="footer-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="index.html">Home</a>
+        <a href="contact.html">Contact</a>
+      </div>
+  
+      <p class="copyright">
+        &copy; 2025 ServiceHub. All rights reserved.
+      </p>
+    </div>
+    <canvas id="particleCanvas"></canvas>
+  </footer>
+  <script src="script.js"></script>
+</body>
+</html>

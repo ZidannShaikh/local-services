@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Service Search Results</title>
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+      color: white;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    header {
+      padding: 40px 20px;
+      text-align: center;
+      background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+      border-bottom: 1px solid #333;
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(0, 247, 255, 0.1), transparent);
+      animation: shimmer 3s infinite;
+    }
+
+    @keyframes shimmer {
+      0% { left: -100%; }
+      100% { left: 100%; }
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      background: linear-gradient(45deg, #00f7ff, #0080ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 10px;
+    }
+
+    header p {
+      font-size: 1.1rem;
+      color: #aaa;
+    }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+      background: #111;
+      padding: 30px 20px;
+      border-bottom: 1px solid #222;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+    }
+
+    .filter-group {
+      position: relative;
+    }
+
+    .filters select, .filters input {
+      padding: 12px 20px;
+      border-radius: 12px;
+      border: 2px solid transparent;
+      background: linear-gradient(135deg, #1f1f1f, #2a2a2a);
+      color: white;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      min-width: 180px;
+    }
+
+    .filters input[type="text"] {
+      min-width: 250px;
+    }
+
+    .filters select:focus, .filters input:focus {
+      outline: none;
+      border-color: #00f7ff;
+      box-shadow: 0 0 20px rgba(0, 247, 255, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .filters select:hover, .filters input:hover {
+      border-color: #00f7ff44;
+      transform: translateY(-1px);
+    }
+
+    .results-header {
+      padding: 20px;
+      text-align: center;
+      color: #aaa;
+    }
+
+    .results {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 30px;
+      padding: 40px 20px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: linear-gradient(135deg, #1a1a1a, #222);
+      border-radius: 20px;
+      padding: 25px;
+      transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      border: 1px solid transparent;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(0, 247, 255, 0.05), rgba(0, 128, 255, 0.05));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: 1;
+    }
+
+    .card:hover::before {
+      opacity: 1;
+    }
+
+    .card:hover {
+      border-color: #00f7ff;
+      transform: translateY(-10px) scale(1.02);
+      box-shadow: 0 20px 40px rgba(0, 247, 255, 0.2);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 15px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .service-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #00f7ff, #0080ff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
+
+    .card h3 {
+      margin: 10px 0 5px;
+      font-size: 1.3rem;
+      font-weight: 600;
+      position: relative;
+      z-index: 2;
+    }
+
+    .service-type {
+      font-size: 0.85rem;
+      color: #00f7ff;
+      font-weight: 500;
+      margin-bottom: 10px;
+    }
+
+    .rating {
+      color: gold;
+      margin: 8px 0;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .rating-count {
+      color: #aaa;
+      font-size: 0.9rem;
+      margin-left: 5px;
+    }
+
+    .location {
+      font-size: 0.95rem;
+      color: #aaa;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      margin: 8px 0;
+      position: relative;
+      z-index: 2;
+    }
+
+    .price {
+      font-weight: 600;
+      color: #00f7ff;
+      margin-top: 15px;
+      font-size: 1.1rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .availability {
+      font-size: 0.8rem;
+      color: #4CAF50;
+      margin-top: 5px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .bookmark {
+      cursor: pointer;
+      color: #888;
+      transition: all 0.3s ease;
+      font-size: 1.2rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .bookmark:hover {
+      color: gold;
+      transform: scale(1.2);
+    }
+
+    .bookmark.active {
+      color: gold;
+      animation: bookmarkPulse 0.5s ease;
+    }
+
+    @keyframes bookmarkPulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.3); }
+      100% { transform: scale(1); }
+    }
+
+    .no-results {
+      text-align: center;
+      padding: 60px 20px;
+      color: #666;
+    }
+
+    .no-results i {
+      font-size: 4rem;
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    .floating-elements {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .floating-circle {
+      position: absolute;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(0, 247, 255, 0.1), rgba(0, 128, 255, 0.1));
+      animation: float 6s ease-in-out infinite;
+    }
+
+    .floating-circle:nth-child(1) {
+      width: 80px;
+      height: 80px;
+      top: 10%;
+      left: 10%;
+      animation-delay: 0s;
+    }
+
+    .floating-circle:nth-child(2) {
+      width: 60px;
+      height: 60px;
+      top: 70%;
+      right: 15%;
+      animation-delay: 2s;
+    }
+
+    .floating-circle:nth-child(3) {
+      width: 100px;
+      height: 100px;
+      bottom: 20%;
+      left: 20%;
+      animation-delay: 4s;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(180deg); }
+    }
+
+    .contact-btn {
+      background: linear-gradient(135deg, #00f7ff, #0080ff);
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      color: white;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      margin-top: 10px;
+    }
+
+    .contact-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 247, 255, 0.4);
+    }
+
+    @media (max-width: 768px) {
+      .filters {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .filters select, .filters input {
+        width: 100%;
+        max-width: 300px;
+      }
+      
+      .results {
+        grid-template-columns: 1fr;
+        padding: 20px 15px;
+      }
+      
+      header h1 {
+        font-size: 2rem;
+      }
+    }
+    .service-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  transition: transform 0.2s ease;
+}
+.service-link:hover .card {
+  transform: scale(1.02);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+}
+
+  </style>
+</head>
+<body>
+  <div class="floating-elements">
+    <div class="floating-circle"></div>
+    <div class="floating-circle"></div>
+    <div class="floating-circle"></div>
+  </div>
+
+  <header>
+    <h1>Service Search</h1>
+    <p>Find trusted professionals near you</p>
+  </header>
+
+  <section class="filters">
+    <div class="filter-group">
+      <input type="text" id="searchInput" placeholder="🔍 Search service or provider...">
+    </div>
+    <div class="filter-group">
+      <select id="locationFilter">
+        <option value="">📍 All Locations</option>
+        <option>Shahada</option>
+        <option>Nandurbar</option>
+        <option>Pune</option>
+        <option>Mumbai</option>
+        <option>Nagpur</option>
+        <option>Delhi</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <select id="ratingFilter">
+        <option value="">⭐ All Ratings</option>
+        <option value="5">5 ⭐ Only</option>
+        <option value="4">4+ ⭐</option>
+        <option value="3">3+ ⭐</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <select id="serviceFilter">
+        <option value="">🔧 All Services</option>
+        <option value="electrical">Electrical</option>
+        <option value="plumbing">Plumbing</option>
+        <option value="carpentry">Carpentry</option>
+        <option value="mechanic">Mechanic</option>
+        <option value="tutor">Tutor</option>
+        <option value="cleaning">Cleaning</option>
+        <option value="beauty">Beauty</option>
+        <option value="fitness">Fitness</option>
+      </select>
+    </div>
+  </section>
+
+  <div class="results-header">
+    <p id="resultsCount">Showing all services</p>
+  </div>
+
+  <section class="results" id="resultsContainer">
+    <!-- Services will be dynamically populated -->
+  </section>
+
+  <script>
+    // Register GSAP plugins
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Service data
+    const services = [
+      {
+        name: "Awais Electric Works",
+    type: "Electrical Services",
+    category: "electrical",
+    icon: "⚡",
+    rating: 5,
+    ratingCount: 127,
+    location: "Shahada",
+    price: "₹250/hour",
+    availability: "Available now",
+    profilePage: "awais.html"
+  },
+  {
+    name: "Saifulla Plumbing Solutions",
+    type: "Plumbing Services",
+    category: "plumbing",
+    icon: "🔧",
+    rating: 4,
+    ratingCount: 89,
+    location: "Nandurbar",
+    price: "₹300/hour",
+    availability: "Available today",
+    profilePage: "saifulla.html"
+  },
+  
+      {
+        name: "Aman's Carpentry",
+        type: "Wood Work & Furniture",
+        category: "carpentry",
+        icon: "🪚",
+        rating: 5,
+        ratingCount: 156,
+        location: "Pune",
+        price: "₹400/hour",
+        availability: "Available now"
+      },
+      {
+        name: "Bike Care Mechanics",
+        type: "Two Wheeler Service",
+        category: "mechanic",
+        icon: "🏍️",
+        rating: 4,
+        ratingCount: 203,
+        location: "Mumbai",
+        price: "₹200/service",
+        availability: "Available today"
+      },
+      {
+        name: "Auto Fix Services",
+        type: "Three Wheeler Service",
+        category: "mechanic",
+        icon: "🛺",
+        rating: 4,
+        ratingCount: 78,
+        location: "Nagpur",
+        price: "₹350/service",
+        availability: "Available now"
+      },
+      {
+        name: "MathGenius Tutors",
+        type: "Mathematics Tuition",
+        category: "tutor",
+        icon: "📚",
+        rating: 5,
+        ratingCount: 234,
+        location: "Delhi",
+        price: "₹500/hour",
+        availability: "Slots available"
+      },
+      {
+        name: "English Feast Academy",
+        type: "English Language",
+        category: "tutor",
+        icon: "📖",
+        rating: 5,
+        ratingCount: 189,
+        location: "Pune",
+        price: "₹400/hour",
+        availability: "Available now"
+      },
+      {
+        name: "CleanSpot Services",
+        type: "Home Cleaning",
+        category: "cleaning",
+        icon: "🧽",
+        rating: 4,
+        ratingCount: 145,
+        location: "Mumbai",
+        price: "₹15/sqft",
+        availability: "Available today"
+      },
+      {
+        name: "Sparkle Beauty Salon",
+        type: "Beauty & Grooming",
+        category: "beauty",
+        icon: "💄",
+        rating: 5,
+        ratingCount: 267,
+        location: "Pune",
+        price: "₹800/service",
+        availability: "Book appointment"
+      },
+      {
+        name: "FitLife Personal Trainer",
+        type: "Fitness Training",
+        category: "fitness",
+        icon: "💪",
+        rating: 5,
+        ratingCount: 98,
+        location: "Nagpur",
+        price: "₹600/session",
+        availability: "Available now"
+      },
+      {
+        name: "TechFix Computer Repair",
+        type: "Computer & Laptop Service",
+        category: "electrical",
+        icon: "💻",
+        rating: 4,
+        ratingCount: 134,
+        location: "Delhi",
+        price: "₹300/hour",
+        availability: "Available today"
+      },
+      {
+        name: "Garden Care Experts",
+        type: "Gardening & Landscaping",
+        category: "cleaning",
+        icon: "🌱",
+        rating: 4,
+        ratingCount: 87,
+        location: "Shahada",
+        price: "₹250/hour",
+        availability: "Available now"
+      }
+    ];
+
+    let filteredServices = [...services];
+
+    // DOM elements
+    const searchInput = document.getElementById('searchInput');
+    const locationFilter = document.getElementById('locationFilter');
+    const ratingFilter = document.getElementById('ratingFilter');
+    const serviceFilter = document.getElementById('serviceFilter');
+    const resultsContainer = document.getElementById('resultsContainer');
+    const resultsCount = document.getElementById('resultsCount');
+
+    // Create service card HTML
+    function createServiceCard(service) {
+  const stars = '⭐'.repeat(service.rating) + '☆'.repeat(5 - service.rating);
+
+  return `
+    <a href="${service.profilePage || '#'}" class="service-link">
+      <div class="card" data-category="${service.category}">
+        <div class="card-header">
+          <div>
+            <div class="service-icon">${service.icon}</div>
+            <div class="service-type">${service.type}</div>
+            <h3>${service.name}</h3>
+          </div>
+          <span class="bookmark ri-bookmark-line"></span>
+        </div>
+        <div class="rating">
+          ${stars}
+          <span class="rating-count">(${service.ratingCount})</span>
+        </div>
+        <div class="location">
+          <i class="ri-map-pin-line"></i>
+          ${service.location}
+        </div>
+        <div class="availability">
+          <i class="ri-time-line"></i>
+          ${service.availability}
+        </div>
+        <div class="price">${service.price}</div>
+        <button class="contact-btn" onclick="event.preventDefault(); alert('Contact feature would open here!');">
+          <i class="ri-phone-line"></i> Contact Now
+        </button>
+      </div>
+    </a>
+  `;
+}
+
+    // Render services
+    function renderServices(servicesToRender = filteredServices) {
+      if (servicesToRender.length === 0) {
+        resultsContainer.innerHTML = `
+          <div class="no-results">
+            <i class="ri-search-line"></i>
+            <h3>No services found</h3>
+            <p>Try adjusting your search criteria</p>
+          </div>
+        `;
+        resultsCount.textContent = "No services found";
+      } else {
+        resultsContainer.innerHTML = servicesToRender.map(createServiceCard).join('');
+        resultsCount.textContent = `Showing ${servicesToRender.length} service${servicesToRender.length !== 1 ? 's' : ''}`;
+        
+        // Re-animate cards
+        animateCards();
+        setupBookmarks();
+        setupContactButtons();
+      }
+    }
+
+    // Filter services
+    function filterServices() {
+      const searchTerm = searchInput.value.toLowerCase();
+      const selectedLocation = locationFilter.value;
+      const selectedRating = ratingFilter.value;
+      const selectedService = serviceFilter.value;
+
+      filteredServices = services.filter(service => {
+        const matchesSearch = searchTerm === '' || 
+          service.name.toLowerCase().includes(searchTerm) ||
+          service.type.toLowerCase().includes(searchTerm) ||
+          service.category.toLowerCase().includes(searchTerm);
+        
+        const matchesLocation = selectedLocation === '' || service.location === selectedLocation;
+        const matchesRating = selectedRating === '' || service.rating >= parseInt(selectedRating);
+        const matchesService = selectedService === '' || service.category === selectedService;
+
+        return matchesSearch && matchesLocation && matchesRating && matchesService;
+      });
+
+      renderServices();
+    }
+
+    // Animation functions
+    function animateCards() {
+      gsap.fromTo(".card", {
+        opacity: 0,
+        y: 50,
+        scale: 0.9,
+        rotationX: 45
+      }, {
+        scrollTrigger: {
+          trigger: ".results",
+          start: "top 85%",
+          toggleActions: "play none none reverse"
+        },
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        rotationX: 0,
+        duration: 0.8,
+        stagger: 0.1,
+        ease: "power3.out"
+      });
+
+      // Service icon animations
+      gsap.fromTo(".service-icon", {
+        scale: 0,
+        rotation: -180
+      }, {
+        scrollTrigger: {
+          trigger: ".results",
+          start: "top 80%"
+        },
+        scale: 1,
+        rotation: 0,
+        duration: 0.6,
+        stagger: 0.1,
+        ease: "back.out(1.7)"
+      });
+    }
+
+    // Setup bookmark functionality
+    function setupBookmarks() {
+      document.querySelectorAll('.bookmark').forEach(icon => {
+        icon.addEventListener('click', (e) => {
+          e.stopPropagation();
+          icon.classList.toggle('active');
+          icon.classList.toggle('ri-bookmark-line');
+          icon.classList.toggle('ri-bookmark-fill');
+          
+          // Add animation feedback
+          gsap.to(icon, {
+            scale: 1.3,
+            duration: 0.1,
+            yoyo: true,
+            repeat: 1,
+            ease: "power2.inOut"
+          });
+        });
+      });
+    }
+
+    // Setup contact button functionality
+    function setupContactButtons() {
+      document.querySelectorAll('.contact-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          
+          // Animation feedback
+          gsap.to(btn, {
+            scale: 0.95,
+            duration: 0.1,
+            yoyo: true,
+            repeat: 1,
+            ease: "power2.inOut"
+          });
+          
+          // Simulate contact action
+          setTimeout(() => {
+            alert('Contact feature would open here!');
+          }, 200);
+        });
+      });
+    }
+
+    // Header animations
+    function initHeaderAnimations() {
+      gsap.fromTo("header h1", {
+        opacity: 0,
+        y: -50,
+        scale: 0.8
+      }, {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        duration: 1,
+        ease: "power3.out"
+      });
+
+      gsap.fromTo("header p", {
+        opacity: 0,
+        y: 30
+      }, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        delay: 0.3,
+        ease: "power2.out"
+      });
+    }
+
+    // Filter animations
+    function initFilterAnimations() {
+      gsap.fromTo(".filters > *", {
+        opacity: 0,
+        y: 20,
+        scale: 0.9
+      }, {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        duration: 0.6,
+        stagger: 0.1,
+        delay: 0.5,
+        ease: "power2.out"
+      });
+    }
+
+    // Event listeners
+    searchInput.addEventListener('input', filterServices);
+    locationFilter.addEventListener('change', filterServices);
+    ratingFilter.addEventListener('change', filterServices);
+    serviceFilter.addEventListener('change', filterServices);
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      renderServices();
+      initHeaderAnimations();
+      initFilterAnimations();
+      
+      // Initial card animation
+      setTimeout(() => {
+        animateCards();
+      }, 800);
+    });
+
+    // Smooth scrolling for mobile
+    document.addEventListener('touchstart', {passive: true});
+  </script>
+</body>
+</html>

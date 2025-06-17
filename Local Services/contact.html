@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Animated Contact Form</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Mystery+Quest&display=swap');
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family:'Mystery Quest', cursive;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1000px;
+            overflow: hidden;
+        }
+
+        .background-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            animation: float 6s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        .form-container {
+            position: relative;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 50px;
+            transform-style: preserve-3d;
+            box-shadow: 
+                0 30px 60px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .form-title {
+            font-size: 3rem;
+            font-weight: bold;
+            color: white;
+            text-align: center;
+            margin-bottom: 40px;
+            transform-style: preserve-3d;
+            text-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientShift 3s ease-in-out infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .form-group {
+            position: relative;
+            margin-bottom: 30px;
+            transform-style: preserve-3d;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 20px;
+            font-size: 18px;
+            border: none;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+            transform-style: preserve-3d;
+        }
+
+        .form-input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #4ecdc4;
+            box-shadow: 0 0 30px rgba(78, 205, 196, 0.3);
+            transform: translateZ(10px);
+        }
+
+        .form-label {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 18px;
+            pointer-events: none;
+            transition: all 0.3s ease;
+            transform-origin: left;
+        }
+
+        .form-input:focus + .form-label,
+        .form-input:not(:placeholder-shown) + .form-label {
+            transform: translateY(-40px) translateZ(20px) scale(0.8);
+            color: #4ecdc4;
+            font-weight: bold;
+        }
+
+        textarea.form-input {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 20px;
+            font-size: 20px;
+            font-weight: bold;
+            border: none;
+            border-radius: 15px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            color: white;
+            cursor: pointer;
+            transform-style: preserve-3d;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transform: rotate(45deg);
+            transition: all 0.5s ease;
+            opacity: 0;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-5px) translateZ(20px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .submit-btn:hover::before {
+            opacity: 1;
+            animation: shine 0.5s ease-out;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+
+        .floating-elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            transform-style: preserve-3d;
+        }
+
+        .floating-shape {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: floatAround 8s infinite ease-in-out;
+        }
+
+        @keyframes floatAround {
+            0%, 100% { 
+                transform: translate3d(0, 0, 0) rotateX(0deg) rotateY(0deg); 
+            }
+            25% { 
+                transform: translate3d(100px, -50px, 50px) rotateX(90deg) rotateY(90deg); 
+            }
+            50% { 
+                transform: translate3d(-50px, -100px, -50px) rotateX(180deg) rotateY(180deg); 
+            }
+            75% { 
+                transform: translate3d(-100px, 50px, 100px) rotateX(270deg) rotateY(270deg); 
+            }
+        }
+
+        .success-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            color: white;
+            padding: 30px 50px;
+            border-radius: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            backdrop-filter: blur(20px);
+        }
+
+        @media (max-width: 768px) {
+            .form-container {
+                padding: 30px 20px;
+                margin: 20px;
+            }
+            
+            .form-title {
+                font-size: 2rem;
+            }
+            
+            .form-input {
+                padding: 15px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-particles"></div>
+    
+    <div class="form-container">
+        <div class="floating-elements">
+            <div class="floating-shape"></div>
+            <div class="floating-shape"></div>
+            <div class="floating-shape"></div>
+            <div class="floating-shape"></div>
+        </div>
+        
+        <h1 class="form-title">Get In Touch</h1>
+        
+        <form id="contactForm">
+            <div class="form-group">
+                <input type="text" class="form-input" placeholder=" " required>
+                <label class="form-label">Full Name</label>
+            </div>
+            
+            <div class="form-group">
+                <input type="email" class="form-input" placeholder=" " required>
+                <label class="form-label">Email Address</label>
+            </div>
+            
+            <div class="form-group">
+                <input type="tel" class="form-input" placeholder=" ">
+                <label class="form-label">Phone Number</label>
+            </div>
+            
+            <div class="form-group">
+                <input type="text" class="form-input" placeholder=" ">
+                <label class="form-label">Subject</label>
+            </div>
+            
+            <div class="form-group">
+                <textarea class="form-input" placeholder=" " required></textarea>
+                <label class="form-label">Message</label>
+            </div>
+            
+            <button type="submit" class="submit-btn">
+                Send Message
+            </button>
+        </form>
+    </div>
+
+    <div class="success-message" id="successMessage">
+        🚀 Message Sent Successfully!
+    </div>
+
+    <script>
+        // Initialize GSAP timeline
+        const tl = gsap.timeline();
+        
+        // Create floating particles
+        function createParticles() {
+            const particleContainer = document.querySelector('.background-particles');
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                particle.style.animationDuration = (Math.random() * 3 + 3) + 's';
+                particleContainer.appendChild(particle);
+            }
+        }
+
+        // Initial animations
+        function initAnimations() {
+            // Form container entrance
+            gsap.set('.form-container', {
+                rotationX: -15,
+                rotationY: 25,
+                z: -200,
+                opacity: 0,
+                scale: 0.8
+            });
+
+            tl.to('.form-container', {
+                duration: 1.5,
+                rotationX: 0,
+                rotationY: 0,
+                z: 0,
+                opacity: 1,
+                scale: 1,
+                ease: "back.out(1.7)"
+            });
+
+            // Title animation
+            gsap.set('.form-title', {
+                y: -100,
+                opacity: 0,
+                rotationX: -90
+            });
+
+            tl.to('.form-title', {
+                duration: 1,
+                y: 0,
+                opacity: 1,
+                rotationX: 0,
+                ease: "bounce.out"
+            }, '-=1');
+
+            // Form groups staggered animation
+            gsap.set('.form-group', {
+                x: -100,
+                opacity: 0,
+                rotationY: -45
+            });
+
+            tl.to('.form-group', {
+                duration: 0.8,
+                x: 0,
+                opacity: 1,
+                rotationY: 0,
+                stagger: 0.1,
+                ease: "power2.out"
+            }, '-=0.5');
+
+            // Submit button animation
+            gsap.set('.submit-btn', {
+                y: 100,
+                opacity: 0,
+                scale: 0.5
+            });
+
+            tl.to('.submit-btn', {
+                duration: 1,
+                y: 0,
+                opacity: 1,
+                scale: 1,
+                ease: "elastic.out(1, 0.5)"
+            }, '-=0.3');
+
+            // Floating shapes animation
+            gsap.set('.floating-shape', {
+                scale: 0,
+                opacity: 0
+            });
+
+            tl.to('.floating-shape', {
+                duration: 1,
+                scale: 1,
+                opacity: 1,
+                stagger: 0.2,
+                ease: "power2.out"
+            }, '-=1');
+        }
+
+        // Mouse movement parallax effect
+        function addParallaxEffect() {
+            document.addEventListener('mousemove', (e) => {
+                const mouseX = (e.clientX / window.innerWidth) - 0.5;
+                const mouseY = (e.clientY / window.innerHeight) - 0.5;
+
+                gsap.to('.form-container', {
+                    duration: 1,
+                    rotationY: mouseX * 10,
+                    rotationX: -mouseY * 10,
+                    ease: "power2.out"
+                });
+
+                gsap.to('.floating-shape', {
+                    duration: 2,
+                    x: mouseX * 50,
+                    y: mouseY * 50,
+                    ease: "power2.out"
+                });
+            });
+        }
+
+        // Input focus animations
+        function addInputAnimations() {
+            const inputs = document.querySelectorAll('.form-input');
+            
+            inputs.forEach(input => {
+                input.addEventListener('focus', () => {
+                    gsap.to(input, {
+                        duration: 0.3,
+                        scale: 1.02,
+                        z: 20,
+                        ease: "power2.out"
+                    });
+                });
+
+                input.addEventListener('blur', () => {
+                    gsap.to(input, {
+                        duration: 0.3,
+                        scale: 1,
+                        z: 0,
+                        ease: "power2.out"
+                    });
+                });
+            });
+        }
+
+        // Form submission animation
+        function addSubmitAnimation() {
+            const form = document.getElementById('contactForm');
+            const submitBtn = document.querySelector('.submit-btn');
+            const successMessage = document.getElementById('successMessage');
+
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+
+                // Button loading animation
+                const originalText = submitBtn.textContent;
+                submitBtn.textContent = 'Sending...';
+                
+                gsap.to(submitBtn, {
+                    duration: 0.3,
+                    scale: 0.95,
+                    ease: "power2.inOut",
+                    yoyo: true,
+                    repeat: 5
+                });
+
+                // Simulate sending delay
+                setTimeout(() => {
+                    // Success message animation
+                    gsap.to(successMessage, {
+                        duration: 0.5,
+                        scale: 1,
+                        ease: "back.out(1.7)"
+                    });
+
+                    // Form fade out
+                    gsap.to('.form-container', {
+                        duration: 1,
+                        opacity: 0.3,
+                        scale: 0.95,
+                        ease: "power2.out"
+                    });
+
+                    // Reset after 3 seconds
+                    setTimeout(() => {
+                        gsap.to(successMessage, {
+                            duration: 0.3,
+                            scale: 0,
+                            ease: "power2.in"
+                        });
+
+                        gsap.to('.form-container', {
+                            duration: 0.5,
+                            opacity: 1,
+                            scale: 1,
+                            ease: "power2.out"
+                        });
+
+                        submitBtn.textContent = originalText;
+                        form.reset();
+                    }, 3000);
+                }, 2000);
+            });
+        }
+
+        // Continuous floating animation for container
+        function addFloatingAnimation() {
+            gsap.to('.form-container', {
+                duration: 6,
+                y: -10,
+                ease: "power1.inOut",
+                yoyo: true,
+                repeat: -1
+            });
+        }
+
+        // Initialize everything
+        document.addEventListener('DOMContentLoaded', () => {
+            createParticles();
+            initAnimations();
+            addParallaxEffect();
+            addInputAnimations();
+            addSubmitAnimation();
+            
+            // Add floating animation after initial animations complete
+            setTimeout(() => {
+                addFloatingAnimation();
+            }, 2000);
+        });
+
+        // Add dynamic lighting effect
+        document.addEventListener('mousemove', (e) => {
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            
+            document.body.style.background = `radial-gradient(circle at ${x * 100}% ${y * 100}%, 
+                rgba(102, 126, 234, 0.8) 0%, 
+                rgba(118, 75, 162, 0.9) 50%, 
+                rgba(64, 81, 151, 1) 100%)`;
+        });
+    </script>
+</body>
+</html>

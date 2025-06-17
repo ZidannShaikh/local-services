@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Connecting Communities</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Crimson+Text:wght@400;600&display=swap');
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        } 
+
+        body {
+           font-family: 'Crimson Text', serif;
+            background: linear-gradient(135deg, #2d5a27 0%, #4a7c59 100%);
+            overflow-x: hidden;
+            color: white;
+        }
+
+        .container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .section {
+            position: absolute;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            opacity: 0;
+        }
+
+        .section.active {
+            opacity: 1;
+        }
+
+        h1, h2 {
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            background: linear-gradient(45deg, #d63384, #20c997);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            text-align: center;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .morphing-container {
+            position: relative;
+            width: 400px;
+            height: 400px;
+            margin: 2rem auto;
+        }
+
+        .map-base {
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.05) 100%);
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .location-dot {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #d63384;
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(214, 51, 132, 0.8);
+        }
+
+        .service-icon {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, #20c997, #198754);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            opacity: 0;
+            transform: scale(0);
+        }
+
+        .connection-line {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(90deg, #d63384, #20c997);
+            opacity: 0;
+            transform: scaleX(0);
+            transform-origin: left;
+        }
+
+        .value-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 1rem;
+            width: 250px;
+            height: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transform: scale(0);
+            opacity: 0;
+        }
+
+        .value-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .team-member {
+            width: 150px;
+            height: 150px;
+            background: linear-gradient(135deg, #2d5a27, #4a7c59);
+            border-radius: 50%;
+            margin: 1rem;
+            position: relative;
+            opacity: 0;
+            transform: scale(0) rotate(180deg);
+        }
+
+        .team-member::before {
+            content: '👤';
+            font-size: 4rem;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .vision-element {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            opacity: 0;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 1rem;
+            z-index: 1000;
+        }
+
+        .nav-dot {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-dot.active {
+            background: #ff6b6b;
+            transform: scale(1.3);
+        }
+
+        .floating-element {
+            position: absolute;
+            opacity: 0.7;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #ff6b6b, #4ecdc4);
+            transform-origin: left;
+            transform: scaleX(0);
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar"></div>
+    
+    <div class="container">
+        <!-- Section 1: Mission -->
+        <div class="section active" id="section1">
+            <h1>Our Mission</h1>
+            <p>Connecting local services with community needs through innovative technology and human-centered design.</p>
+            
+            <div class="morphing-container">
+                <div class="map-base" id="mapBase">
+                    <div class="location-dot" style="top: 20%; left: 30%;"></div>
+                    <div class="location-dot" style="top: 60%; left: 70%;"></div>
+                    <div class="location-dot" style="top: 80%; left: 20%;"></div>
+                    <div class="location-dot" style="top: 40%; left: 80%;"></div>
+                    <div class="location-dot" style="top: 10%; left: 60%;"></div>
+                    
+                    <div class="connection-line" style="top: 25%; left: 30%; width: 40%; transform: rotate(25deg);"></div>
+                    <div class="connection-line" style="top: 65%; left: 20%; width: 50%; transform: rotate(-15deg);"></div>
+                    <div class="connection-line" style="top: 45%; left: 60%; width: 20%; transform: rotate(45deg);"></div>
+                </div>
+            </div>
+            
+            <div class="floating-element" style="top: 10%; left: 10%; font-size: 2rem;">🏠</div>
+            <div class="floating-element" style="top: 15%; right: 10%; font-size: 2rem; animation-delay: -2s;">🔧</div>
+            <div class="floating-element" style="bottom: 20%; left: 15%; font-size: 2rem; animation-delay: -4s;">🚗</div>
+        </div>
+
+        <!-- Section 2: Values -->
+        <div class="section" id="section2">
+            <h2>Our Core Values</h2>
+            <p>Trust and convenience form the foundation of every interaction, creating lasting relationships within our communities.</p>
+            
+            <div style="display: flex; flex-wrap: wrap; justify-content: center;">
+                <div class="value-card" id="trustCard">
+                    <div class="value-icon">🤝</div>
+                    <h3>Trust</h3>
+                    <p>Building reliable connections</p>
+                </div>
+                <div class="value-card" id="convenienceCard">
+                    <div class="value-icon">⚡</div>
+                    <h3>Convenience</h3>
+                    <p>Seamless service delivery</p>
+                </div>
+                <div class="value-card" id="communityCard">
+                    <div class="value-icon">🌟</div>
+                    <h3>Community</h3>
+                    <p>Strengthening local bonds</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 3: Team Journey -->
+        <div class="section" id="section3">
+            <h2>Our Journey</h2>
+            <p>From a simple idea to a thriving platform, our team has grown alongside the communities we serve.</p>
+            
+            <div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center;">
+                <div class="team-member" id="member1"></div>
+                <div class="team-member" id="member2"></div>
+                <div class="team-member" id="member3"></div>
+                <div class="team-member" id="member4"></div>
+                <div class="team-member" id="member5"></div>
+            </div>
+            
+            <div class="morphing-container">
+                <div class="service-icon" id="icon1" style="top: 50%; left: 50%; transform: translate(-50%, -50%);">🎯</div>
+                <div class="service-icon" id="icon2" style="top: 20%; left: 20%;">💡</div>
+                <div class="service-icon" id="icon3" style="top: 20%; right: 20%;">🚀</div>
+                <div class="service-icon" id="icon4" style="bottom: 20%; left: 20%;">🌱</div>
+                <div class="service-icon" id="icon5" style="bottom: 20%; right: 20%;">🎉</div>
+            </div>
+        </div>
+
+        <!-- Section 4: Vision -->
+        <div class="section" id="section4">
+            <h2>Our Vision</h2>
+            <p>Empowering local economies by creating a thriving ecosystem where services and communities flourish together.</p>
+            
+            <div class="morphing-container">
+                <div class="vision-element" id="economy1" style="top: 10%; left: 10%;">💼</div>
+                <div class="vision-element" id="economy2" style="top: 10%; right: 10%;">📈</div>
+                <div class="vision-element" id="economy3" style="bottom: 10%; left: 10%;">🏪</div>
+                <div class="vision-element" id="economy4" style="bottom: 10%; right: 10%;">🌍</div>
+                <div class="vision-element" id="economyCenter" style="top: 50%; left: 50%; transform: translate(-50%, -50%); width: 150px; height: 150px; font-size: 3rem;">🤝</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="navigation">
+        <div class="nav-dot active" data-section="1"></div>
+        <div class="nav-dot" data-section="2"></div>
+        <div class="nav-dot" data-section="3"></div>
+        <div class="nav-dot" data-section="4"></div>
+    </div>
+
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+        
+        let currentSection = 1;
+        const totalSections = 4;
+        
+        // Initialize GSAP timeline
+        const tl = gsap.timeline();
+        
+        // Initial setup
+        gsap.set('.section:not(.active)', { opacity: 0, y: 100 });
+        gsap.set('.connection-line', { scaleX: 0 });
+        gsap.set('.service-icon', { scale: 0, opacity: 0 });
+        gsap.set('.value-card', { scale: 0, opacity: 0 });
+        gsap.set('.team-member', { scale: 0, opacity: 0, rotation: 180 });
+        gsap.set('.vision-element', { scale: 0, opacity: 0 });
+        
+        // Animate initial section
+        function animateSection1() {
+            const tl = gsap.timeline();
+            
+            tl.to('.location-dot', {
+                scale: 1.5,
+                duration: 0.5,
+                stagger: 0.1,
+                ease: "back.out(1.7)"
+            })
+            .to('.connection-line', {
+                scaleX: 1,
+                opacity: 1,
+                duration: 0.8,
+                stagger: 0.2,
+                ease: "power2.out"
+            }, "-=0.3")
+            .to('.location-dot', {
+                boxShadow: "0 0 40px rgba(255, 107, 107, 1)",
+                duration: 1,
+                repeat: -1,
+                yoyo: true,
+                ease: "sine.inOut"
+            });
+        }
+        
+        function animateSection2() {
+            const tl = gsap.timeline();
+            
+            // Morph map into value cards
+            tl.to('#mapBase', {
+                scale: 0,
+                rotation: 360,
+                opacity: 0,
+                duration: 1,
+                ease: "power2.in"
+            })
+            .to('.value-card', {
+                scale: 1,
+                opacity: 1,
+                duration: 0.8,
+                stagger: 0.2,
+                ease: "back.out(1.7)",
+                rotationY: 360
+            }, "-=0.5")
+            .to('.value-card', {
+                y: -10,
+                duration: 2,
+                repeat: -1,
+                yoyo: true,
+                stagger: 0.3,
+                ease: "sine.inOut"
+            });
+        }
+        
+        function animateSection3() {
+            const tl = gsap.timeline();
+            
+            // Hide value cards and show team
+            tl.to('.value-card', {
+                scale: 0,
+                opacity: 0,
+                rotation: 180,
+                duration: 0.6,
+                stagger: 0.1
+            })
+            .to('.team-member', {
+                scale: 1,
+                opacity: 1,
+                rotation: 0,
+                duration: 0.8,
+                stagger: 0.15,
+                ease: "back.out(1.7)"
+            }, "-=0.3")
+            .to('.service-icon', {
+                scale: 1,
+                opacity: 1,
+                duration: 0.6,
+                stagger: 0.1,
+                ease: "elastic.out(1, 0.5)"
+            }, "-=0.4")
+            .to('.service-icon', {
+                rotation: 360,
+                duration: 4,
+                repeat: -1,
+                ease: "none"
+            });
+        }
+        
+        function animateSection4() {
+            const tl = gsap.timeline();
+            
+            // Transform team into vision
+            tl.to('.team-member', {
+                scale: 0,
+                opacity: 0,
+                rotation: 180,
+                duration: 0.6,
+                stagger: 0.1
+            })
+            .to('.service-icon', {
+                scale: 0,
+                opacity: 0,
+                duration: 0.5
+            }, "-=0.5")
+            .to('.vision-element', {
+                scale: 1,
+                opacity: 1,
+                duration: 0.8,
+                stagger: 0.2,
+                ease: "back.out(1.7)"
+            }, "-=0.3")
+            .to('#economyCenter', {
+                scale: 1.2,
+                duration: 2,
+                repeat: -1,
+                yoyo: true,
+                ease: "sine.inOut"
+            })
+            .to('.vision-element:not(#economyCenter)', {
+                rotation: 360,
+                duration: 8,
+                repeat: -1,
+                ease: "none"
+            }, "-=2");
+        }
+        
+        // Section transition function
+        function transitionToSection(newSection) {
+            if (newSection === currentSection) return;
+            
+            const currentEl = document.getElementById(`section${currentSection}`);
+            const newEl = document.getElementById(`section${newSection}`);
+            
+            // Update navigation
+            document.querySelectorAll('.nav-dot').forEach((dot, index) => {
+                dot.classList.toggle('active', index + 1 === newSection);
+            });
+            
+            // Update progress bar
+            gsap.to('.progress-bar', {
+                scaleX: newSection / totalSections,
+                duration: 0.5,
+                ease: "power2.out"
+            });
+            
+            // Transition animation
+            const tl = gsap.timeline({
+                onComplete: () => {
+                    currentSection = newSection;
+                    
+                    // Animate new section
+                    switch(newSection) {
+                        case 1: animateSection1(); break;
+                        case 2: animateSection2(); break;
+                        case 3: animateSection3(); break;
+                        case 4: animateSection4(); break;
+                    }
+                }
+            });
+            
+            tl.to(currentEl, {
+                opacity: 0,
+                scale: 0.8,
+                rotationY: 90,
+                duration: 0.6,
+                ease: "power2.in"
+            })
+            .set(newEl, { opacity: 1 })
+            .fromTo(newEl, {
+                scale: 0.8,
+                rotationY: -90
+            }, {
+                scale: 1,
+                rotationY: 0,
+                duration: 0.6,
+                ease: "power2.out"
+            }, "-=0.1");
+            
+            currentEl.classList.remove('active');
+            newEl.classList.add('active');
+        }
+        
+        // Navigation event listeners
+        document.querySelectorAll('.nav-dot').forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                transitionToSection(index + 1);
+            });
+        });
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' && currentSection < totalSections) {
+                transitionToSection(currentSection + 1);
+            } else if (e.key === 'ArrowLeft' && currentSection > 1) {
+                transitionToSection(currentSection - 1);
+            }
+        });
+        
+        // Auto-advance (optional)
+        let autoAdvance = setInterval(() => {
+            const nextSection = currentSection === totalSections ? 1 : currentSection + 1;
+            transitionToSection(nextSection);
+        }, 8000);
+        
+        // Pause auto-advance on user interaction
+        document.addEventListener('click', () => {
+            clearInterval(autoAdvance);
+        });
+        
+        // Initialize first section animation
+        animateSection1();
+        
+        // Add mouse interaction effects
+        document.addEventListener('mousemove', (e) => {
+            const mouseX = e.clientX / window.innerWidth;
+            const mouseY = e.clientY / window.innerHeight;
+            
+            gsap.to('.floating-element', {
+                x: mouseX * 20,
+                y: mouseY * 20,
+                duration: 2,
+                ease: "power1.out"
+            });
+        });
+        
+        // Touch/swipe support for mobile
+        let touchStartX = 0;
+        
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.touches[0].clientX;
+        });
+        
+        document.addEventListener('touchend', (e) => {
+            const touchEndX = e.changedTouches[0].clientX;
+            const diff = touchStartX - touchEndX;
+            
+            if (Math.abs(diff) > 50) {
+                if (diff > 0 && currentSection < totalSections) {
+                    transitionToSection(currentSection + 1);
+                } else if (diff < 0 && currentSection > 1) {
+                    transitionToSection(currentSection - 1);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

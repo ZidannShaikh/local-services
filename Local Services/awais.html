@@ -1,0 +1,1485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Service Provider Profile & Booking</title>
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+      color: white;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Animated Background */
+    .animated-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      overflow: hidden;
+    }
+
+    .bg-particle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: linear-gradient(45deg, #00f7ff, #0080ff);
+      border-radius: 50%;
+      animation: float 8s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.3; }
+      50% { transform: translateY(-100px) rotate(180deg); opacity: 1; }
+    }
+
+    /* Navigation */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: rgba(10, 10, 10, 0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(0, 247, 255, 0.2);
+      padding: 15px 20px;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .back-btn {
+      background: linear-gradient(135deg, #00f7ff, #0080ff);
+      border: none;
+      padding: 12px 20px;
+      border-radius: 25px;
+      color: white;
+      cursor: pointer;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 247, 255, 0.3);
+    }
+
+    .back-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 247, 255, 0.4);
+    }
+
+    .nav-actions {
+      display: flex;
+      gap: 15px;
+    }
+
+    .nav-btn {
+      background: transparent;
+      border: 2px solid #00f7ff;
+      padding: 8px 16px;
+      border-radius: 20px;
+      color: #00f7ff;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .nav-btn:hover {
+      background: #00f7ff;
+      color: #0a0a0a;
+      transform: translateY(-2px);
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 100px 20px 50px;
+    }
+
+    /* Provider Profile Section */
+    .provider-profile {
+      background: linear-gradient(135deg, rgba(26, 26, 46, 0.8), rgba(22, 33, 62, 0.8));
+      border-radius: 30px;
+      padding: 40px;
+      margin-bottom: 40px;
+      border: 1px solid rgba(0, 247, 255, 0.2);
+      backdrop-filter: blur(20px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .provider-profile::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: conic-gradient(from 0deg, transparent, rgba(0, 247, 255, 0.1), transparent);
+      animation: rotate 10s linear infinite;
+      z-index: -1;
+    }
+
+    @keyframes rotate {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .profile-header {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 30px;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .profile-image {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #00f7ff, #0080ff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .profile-image::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      animation: shimmer 2s infinite;
+    }
+
+    @keyframes shimmer {
+      0% { left: -100%; }
+      100% { left: 100%; }
+    }
+
+    .profile-info h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      background: linear-gradient(45deg, #00f7ff, #0080ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 10px;
+    }
+
+    .profile-info .service-type {
+      color: #00f7ff;
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 15px;
+    }
+
+    .rating-section {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+
+    .stars {
+      font-size: 1.5rem;
+      color: gold;
+    }
+
+    .rating-info {
+      color: #aaa;
+    }
+
+    .profile-stats {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: end;
+    }
+
+    .stat-item {
+      background: rgba(0, 247, 255, 0.1);
+      padding: 10px 20px;
+      border-radius: 15px;
+      border: 1px solid rgba(0, 247, 255, 0.3);
+      text-align: center;
+      min-width: 120px;
+    }
+
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #00f7ff;
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      color: #aaa;
+    }
+
+    /* Services Grid */
+    .services-section {
+      margin-bottom: 40px;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      text-align: center;
+      background: linear-gradient(45deg, #00f7ff, #0080ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .service-card {
+      background: linear-gradient(135deg, rgba(26, 26, 46, 0.6), rgba(22, 33, 62, 0.6));
+      border-radius: 20px;
+      padding: 25px;
+      border: 1px solid rgba(0, 247, 255, 0.2);
+      transition: all 0.4s ease;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .service-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(0, 247, 255, 0.1), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .service-card:hover::before {
+      left: 100%;
+    }
+
+    .service-card:hover {
+      transform: translateY(-5px);
+      border-color: #00f7ff;
+      box-shadow: 0 15px 30px rgba(0, 247, 255, 0.2);
+    }
+
+    .service-card h3 {
+      color: #00f7ff;
+      margin-bottom: 10px;
+      font-size: 1.3rem;
+    }
+
+    .service-details {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .service-duration {
+      color: #aaa;
+    }
+
+    .service-price {
+      color: #00f7ff;
+      font-weight: 600;
+      font-size: 1.2rem;
+    }
+
+    .book-service-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #00f7ff, #0080ff);
+      border: none;
+      padding: 12px;
+      border-radius: 12px;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .book-service-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 247, 255, 0.4);
+    }
+
+    /* Booking Form Modal */
+    .booking-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(20px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .booking-modal.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .booking-form {
+      background: linear-gradient(135deg, rgba(26, 26, 46, 0.95), rgba(22, 33, 62, 0.95));
+      border-radius: 30px;
+      padding: 40px;
+      max-width: 500px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+      border: 1px solid rgba(0, 247, 255, 0.3);
+      position: relative;
+    }
+
+    .booking-form::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(45deg, #00f7ff, #0080ff, #00f7ff);
+      border-radius: 30px;
+      z-index: -1;
+      animation: borderGlow 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes borderGlow {
+      0% { opacity: 0.5; }
+      100% { opacity: 1; }
+    }
+
+    .form-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .form-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      background: linear-gradient(45deg, #00f7ff, #0080ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      color: #aaa;
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .close-btn:hover {
+      color: #00f7ff;
+      transform: rotate(90deg);
+    }
+
+    .form-group {
+      margin-bottom: 25px;
+      position: relative;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #00f7ff;
+      font-weight: 600;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 15px;
+      border: 2px solid rgba(0, 247, 255, 0.3);
+      border-radius: 12px;
+      background: rgba(26, 26, 46, 0.8);
+      color: white;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: #00f7ff;
+      box-shadow: 0 0 20px rgba(0, 247, 255, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    .time-slots {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .time-slot {
+      padding: 10px;
+      border: 2px solid rgba(0, 247, 255, 0.3);
+      border-radius: 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: transparent;
+      color: white;
+    }
+
+    .time-slot:hover {
+      border-color: #00f7ff;
+      background: rgba(0, 247, 255, 0.1);
+    }
+
+    .time-slot.selected {
+      background: linear-gradient(135deg, #00f7ff, #0080ff);
+      border-color: #00f7ff;
+    }
+
+    .submit-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #00f7ff, #0080ff);
+      border: none;
+      padding: 18px;
+      border-radius: 15px;
+      color: white;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(0, 247, 255, 0.4);
+    }
+
+    .submit-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .submit-btn:hover::before {
+      left: 100%;
+    }
+
+    /* About Section */
+    .about-section {
+      background: linear-gradient(135deg, rgba(26, 26, 46, 0.6), rgba(22, 33, 62, 0.6));
+      border-radius: 20px;
+      padding: 30px;
+      margin-bottom: 30px;
+      border: 1px solid rgba(0, 247, 255, 0.2);
+    }
+
+    .about-section h3 {
+      color: #00f7ff;
+      margin-bottom: 15px;
+      font-size: 1.5rem;
+    }
+
+    .about-section p {
+      line-height: 1.6;
+      color: #ccc;
+    }
+
+    /* Reviews Section */
+    .reviews-section {
+      background: linear-gradient(135deg, rgba(26, 26, 46, 0.6), rgba(22, 33, 62, 0.6));
+      border-radius: 20px;
+      padding: 30px;
+      border: 1px solid rgba(0, 247, 255, 0.2);
+    }
+
+    .review-item {
+      padding: 20px;
+      border-bottom: 1px solid rgba(0, 247, 255, 0.1);
+      margin-bottom: 20px;
+    }
+
+    .review-item:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+    }
+
+    .review-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .reviewer-name {
+      font-weight: 600;
+      color: #00f7ff;
+    }
+
+    .review-rating {
+      color: gold;
+    }
+
+    .review-text {
+      color: #ccc;
+      line-height: 1.5;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .profile-header {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 20px;
+      }
+
+      .profile-stats {
+        align-items: center;
+      }
+
+      .services-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .time-slots {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .container {
+        padding: 80px 15px 30px;
+      }
+
+      .booking-form {
+        padding: 30px 20px;
+      }
+    }
+
+    /* Success Animation */
+    .success-animation {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: linear-gradient(135deg, #00f7ff, #0080ff);
+      color: white;
+      padding: 30px;
+      border-radius: 20px;
+      text-align: center;
+      z-index: 3000;
+      opacity: 0;
+      scale: 0;
+    }
+
+    .success-animation.show {
+      opacity: 1;
+      scale: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="animated-bg"></div>
+
+  <nav class="nav">
+    <button class="back-btn" onclick="window.location.href='services.html'">
+      <i class="ri-arrow-left-line"></i>
+      Back to Search
+    </button>
+    <div class="nav-actions">
+      <button class="nav-btn">
+        <i class="ri-heart-line"></i>
+      </button>
+      <button class="nav-btn">
+        <i class="ri-share-line"></i>
+      </button>
+    </div>
+  </nav>
+
+  <div class="container">
+    <!-- Provider Profile -->
+    <div class="provider-profile">
+      <div class="profile-header">
+        <div class="profile-image">
+          ⚡
+        </div>
+        <div class="profile-info">
+          <h1>Awais Electric Works</h1>
+          <div class="service-type">Professional Electrical Services</div>
+          <div class="rating-section">
+            <div class="stars">⭐⭐⭐⭐⭐</div>
+            <div class="rating-info">5.0 (127 reviews)</div>
+          </div>
+          <div style="display: flex; gap: 20px; align-items: center;">
+            <div style="display: flex; align-items: center; gap: 5px; color: #aaa;">
+              <i class="ri-map-pin-line"></i>
+              Shahada, Maharashtra
+            </div>
+            <div style="display: flex; align-items: center; gap: 5px; color: #4CAF50;">
+              <i class="ri-checkbox-circle-line"></i>
+              Available Now
+            </div>
+          </div>
+        </div>
+        <div class="profile-stats">
+          <div class="stat-item">
+            <div class="stat-value">127</div>
+            <div class="stat-label">Reviews</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">5+</div>
+            <div class="stat-label">Years Exp</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">₹250</div>
+            <div class="stat-label">Per Hour</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Services Section -->
+    <div class="services-section">
+      <h2 class="section-title">Our Services</h2>
+      <div class="services-grid">
+        <div class="service-card">
+          <h3>Home Wiring Installation</h3>
+          <div class="service-details">
+            <span class="service-duration">2-4 hours</span>
+            <span class="service-price">₹500</span>
+          </div>
+          <p style="color: #aaa; margin-bottom: 15px;">Complete electrical wiring for new homes and renovations</p>
+          <button class="book-service-btn" onclick="openBookingModal('Home Wiring Installation', 500)">
+            <i class="ri-calendar-line"></i> Book Now
+          </button>
+        </div>
+
+        <div class="service-card">
+          <h3>Electrical Repair</h3>
+          <div class="service-details">
+            <span class="service-duration">1-2 hours</span>
+            <span class="service-price">₹250</span>
+          </div>
+          <p style="color: #aaa; margin-bottom: 15px;">Fix electrical issues, switches, outlets, and circuits</p>
+          <button class="book-service-btn" onclick="openBookingModal('Electrical Repair', 250)">
+            <i class="ri-calendar-line"></i> Book Now
+          </button>
+        </div>
+
+        <div class="service-card">
+          <h3>Appliance Installation</h3>
+          <div class="service-details">
+            <span class="service-duration">1-3 hours</span>
+            <span class="service-price">₹400</span>
+          </div>
+          <p style="color: #aaa; margin-bottom: 15px;">Install and setup electrical appliances safely</p>
+          <button class="book-service-btn" onclick="openBookingModal('Appliance Installation', 400)">
+            <i class="ri-calendar-line"></i> Book Now
+          </button>
+        </div>
+
+        <div class="service-card">
+          <h3>Emergency Service</h3>
+          <div class="service-details">
+            <span class="service-duration">24/7</span>
+            <span class="service-price">₹350</span>
+          </div>
+          <p style="color: #aaa; margin-bottom: 15px;">24/7 emergency electrical services available</p>
+          <button class="book-service-btn" onclick="openBookingModal('Emergency Service', 350)">
+            <i class="ri-calendar-line"></i> Book Now
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- About Section -->
+    <div class="about-section">
+      <h3>About Awais Electric Works</h3>
+      <p>With over 5 years of experience in electrical services, Awais Electric Works has been serving the Shahada community with reliable, professional, and affordable electrical solutions. We specialize in residential and commercial electrical work, ensuring safety and quality in every project. Our team is fully licensed, insured, and committed to providing excellent customer service.</p>
+    </div>
+
+    <!-- Reviews Section -->
+    <div class="reviews-section">
+      <h3 class="section-title">Customer Reviews</h3>
+      <div class="review-item">
+        <div class="review-header">
+          <span class="reviewer-name">Rajesh Sharma</span>
+          <span class="review-rating">⭐⭐⭐⭐⭐</span>
+        </div>
+        <p class="review-text">"Excellent service! Awais fixed our electrical issues quickly and professionally. Highly recommended for any electrical work."</p>
+      </div>
+      <div class="review-item">
+        <div class="review-header">
+          <span class="reviewer-name">Priya Patel</span>
+          <span class="review-rating">⭐⭐⭐⭐⭐</span>
+        </div>
+        <p class="review-text">"Very punctual and skilled electrician. Fair pricing and quality work. Will definitely hire again."</p>
+      </div>
+      <div class="review-item">
+        <div class="review-header">
+          <span class="reviewer-name">Mohammed Ali</span>
+          <span class="review-rating">⭐⭐⭐⭐⭐</span>
+        </div>
+        <p class="review-text">"Great experience! Professional service and solved our electrical problems efficiently. Thank you!"</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Booking Modal -->
+  <div class="booking-modal" id="bookingModal">
+    <div class="booking-form">
+      <div class="form-header">
+        <h2 class="form-title">Book Appointment</h2>
+        <button class="close-btn" onclick="closeBookingModal()">
+          <i class="ri-close-line"></i>
+        </button>
+      </div>
+
+      <form id="bookingForm">
+        <div class="form-group">
+          <label>Selected Service</label>
+          <input type="text" id="selectedService" readonly>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Your Name</label>
+            <input type="text" id="customerName" required>
+          </div>
+          <div class="form-group">
+            <label>Phone Number</label>
+            <input type="tel" id="customerPhone" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" id="customerEmail" required>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Preferred Date</label>
+            <input type="date" id="appointmentDate" required>
+          </div>
+          <div class="form-group">
+            <label>Service Type</label>
+            <select id="serviceType" required>
+              <option value="">Select urgency</option>
+              <option value="regular">Regular Service</option>
+              <option value="urgent">Urgent (Same Day)</option>
+              <option value="emergency">Emergency (ASAP)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Preferred Time Slots</label>
+          <div class="time-slots">
+            <button type="button" class="time-slot" data-time="09:00">9:00 AM</button>
+            <button type="button" class="time-slot" data-time="11:00">11:00 AM</button>
+            <button type="button" class="time-slot" data-time="14:00">2:00 PM</button>
+            <button type="button" class="time-slot" data-time="16:00">4:00 PM</button>
+            <button type="button" class="time-slot" data-time="18:00">6:00 PM</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Service Address</label>
+          <textarea id="serviceAddress" rows="3" placeholder="Enter complete address where service is needed" required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Additional Notes</label>
+          <textarea id="additionalNotes" rows="3" placeholder="Describe your electrical issue or requirements"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+            <input type="checkbox" id="termsAccepted" required>
+            I agree to the terms and conditions
+          </label>
+        </div>
+
+        <button type="submit" class="submit-btn">
+          <i class="ri-calendar-check-line"></i>
+          Confirm Booking
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Success Animation -->
+  <div class="success-animation" id="successAnimation">
+    <div style="font-size: 3rem; margin-bottom: 15px;">
+      <i class="ri-checkbox-circle-fill" style="color: #4CAF50;"></i>
+    </div>
+    <h3>Booking Confirmed!</h3>
+    <p>We'll contact you shortly to confirm the appointment details.</p>
+  </div>
+<script>
+  // GSAP Animations for Service Provider Profile & Booking
+
+// Register ScrollTrigger plugin
+gsap.registerPlugin(ScrollTrigger);
+
+// Global variables
+let selectedTimeSlot = null;
+let currentService = '';
+let currentPrice = 0;
+
+// Initialize all animations when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+  initializeAnimations();
+  setupEventListeners();
+  createFloatingParticles();
+});
+
+// Main animation initialization
+function initializeAnimations() {
+  // Initial page load animations
+  pageLoadAnimations();
+  
+  // Scroll-triggered animations
+  setupScrollAnimations();
+  
+  // Hover animations
+  setupHoverAnimations();
+  
+  // Navigation animations
+  setupNavigationAnimations();
+}
+
+// Page load animations
+function pageLoadAnimations() {
+  // Animate navigation bar
+  gsap.from('.nav', {
+    duration: 1,
+    y: -100,
+    opacity: 0,
+    ease: 'power3.out'
+  });
+
+  // Animate provider profile section
+  gsap.from('.provider-profile', {
+    duration: 1.2,
+    scale: 0.8,
+    opacity: 0,
+    y: 50,
+    ease: 'power3.out',
+    delay: 0.3
+  });
+
+  // Animate profile image with special effect
+  gsap.from('.profile-image', {
+    duration: 1.5,
+    scale: 0,
+    rotation: 360,
+    ease: 'elastic.out(1, 0.5)',
+    delay: 0.8
+  });
+
+  // Animate profile info elements sequentially
+  gsap.from('.profile-info h1', {
+    duration: 1,
+    x: -50,
+    opacity: 0,
+    ease: 'power2.out',
+    delay: 1
+  });
+
+  gsap.from('.service-type', {
+    duration: 0.8,
+    x: -30,
+    opacity: 0,
+    ease: 'power2.out',
+    delay: 1.2
+  });
+
+  gsap.from('.rating-section', {
+    duration: 0.8,
+    x: -30,
+    opacity: 0,
+    ease: 'power2.out',
+    delay: 1.4
+  });
+
+  // Animate stats with stagger
+  gsap.from('.stat-item', {
+    duration: 0.8,
+    scale: 0,
+    opacity: 0,
+    ease: 'back.out(1.7)',
+    stagger: 0.1,
+    delay: 1.6
+  });
+
+  // Animate service cards with stagger
+  gsap.from('.service-card', {
+    duration: 1,
+    y: 100,
+    opacity: 0,
+    ease: 'power3.out',
+    stagger: 0.2,
+    delay: 0.5
+  });
+}
+
+// Scroll-triggered animations
+function setupScrollAnimations() {
+  // Services section animation
+  gsap.from('.services-section .section-title', {
+    scrollTrigger: {
+      trigger: '.services-section',
+      start: 'top 80%',
+      end: 'bottom 20%',
+      toggleActions: 'play none none reverse'
+    },
+    duration: 1,
+    y: 50,
+    opacity: 0,
+    ease: 'power2.out'
+  });
+
+  // About section animation
+  gsap.from('.about-section', {
+    scrollTrigger: {
+      trigger: '.about-section',
+      start: 'top 80%',
+      end: 'bottom 20%',
+      toggleActions: 'play none none reverse'
+    },
+    duration: 1.2,
+    x: -100,
+    opacity: 0,
+    ease: 'power3.out'
+  });
+
+  // Reviews section animation
+  gsap.from('.reviews-section .section-title', {
+    scrollTrigger: {
+      trigger: '.reviews-section',
+      start: 'top 80%',
+      end: 'bottom 20%',
+      toggleActions: 'play none none reverse'
+    },
+    duration: 1,
+    scale: 0.5,
+    opacity: 0,
+    ease: 'back.out(1.7)'
+  });
+
+  // Individual review items animation
+  gsap.from('.review-item', {
+    scrollTrigger: {
+      trigger: '.reviews-section',
+      start: 'top 70%',
+      end: 'bottom 20%',
+      toggleActions: 'play none none reverse'
+    },
+    duration: 0.8,
+    y: 50,
+    opacity: 0,
+    ease: 'power2.out',
+    stagger: 0.2
+  });
+
+  // Parallax effect for background
+  gsap.to('.animated-bg', {
+    scrollTrigger: {
+      trigger: 'body',
+      start: 'top top',
+      end: 'bottom top',
+      scrub: 1
+    },
+    y: -200,
+    ease: 'none'
+  });
+}
+
+// Hover animations
+function setupHoverAnimations() {
+  // Service card hover animations
+  document.querySelectorAll('.service-card').forEach(card => {
+    const title = card.querySelector('h3');
+    const button = card.querySelector('.book-service-btn');
+    
+    card.addEventListener('mouseenter', () => {
+      gsap.to(title, {
+        duration: 0.3,
+        scale: 1.05,
+        color: '#ffffff',
+        ease: 'power2.out'
+      });
+      
+      gsap.to(button, {
+        duration: 0.3,
+        scale: 1.05,
+        ease: 'power2.out'
+      });
+    });
+    
+    card.addEventListener('mouseleave', () => {
+      gsap.to(title, {
+        duration: 0.3,
+        scale: 1,
+        color: '#00f7ff',
+        ease: 'power2.out'
+      });
+      
+      gsap.to(button, {
+        duration: 0.3,
+        scale: 1,
+        ease: 'power2.out'
+      });
+    });
+  });
+
+  // Navigation button hover animations
+  document.querySelectorAll('.nav-btn').forEach(btn => {
+    btn.addEventListener('mouseenter', () => {
+      gsap.to(btn, {
+        duration: 0.3,
+        scale: 1.1,
+        rotation: 5,
+        ease: 'power2.out'
+      });
+    });
+    
+    btn.addEventListener('mouseleave', () => {
+      gsap.to(btn, {
+        duration: 0.3,
+        scale: 1,
+        rotation: 0,
+        ease: 'power2.out'
+      });
+    });
+  });
+}
+
+// Navigation animations
+function setupNavigationAnimations() {
+  // Back button click animation
+  document.querySelector('.back-btn').addEventListener('click', (e) => {
+    gsap.to(e.target, {
+      duration: 0.1,
+      scale: 0.95,
+      ease: 'power2.out',
+      yoyo: true,
+      repeat: 1
+    });
+  });
+}
+
+// Modal animations
+function openBookingModal(serviceName, price) {
+  currentService = serviceName;
+  currentPrice = price;
+  
+  document.getElementById('selectedService').value = `${serviceName} - ₹${price}`;
+  
+  const modal = document.getElementById('bookingModal');
+  const form = document.querySelector('.booking-form');
+  
+  // Show modal
+  modal.classList.add('active');
+  
+  // Animate modal appearance
+  gsap.fromTo(modal, 
+    { opacity: 0 },
+    { 
+      duration: 0.3,
+      opacity: 1,
+      ease: 'power2.out'
+    }
+  );
+  
+  gsap.fromTo(form,
+    { 
+      scale: 0.8,
+      y: 50,
+      opacity: 0
+    },
+    {
+      duration: 0.5,
+      scale: 1,
+      y: 0,
+      opacity: 1,
+      ease: 'back.out(1.7)',
+      delay: 0.1
+    }
+  );
+
+  // Animate form elements
+  gsap.from('.form-group', {
+    duration: 0.5,
+    y: 30,
+    opacity: 0,
+    ease: 'power2.out',
+    stagger: 0.1,
+    delay: 0.3
+  });
+}
+
+function closeBookingModal() {
+  const modal = document.getElementById('bookingModal');
+  const form = document.querySelector('.booking-form');
+  
+  // Animate modal disappearance
+  gsap.to(form, {
+    duration: 0.3,
+    scale: 0.8,
+    y: 50,
+    opacity: 0,
+    ease: 'power2.in'
+  });
+  
+  gsap.to(modal, {
+    duration: 0.3,
+    opacity: 0,
+    ease: 'power2.in',
+    delay: 0.1,
+    onComplete: () => {
+      modal.classList.remove('active');
+      resetForm();
+    }
+  });
+}
+
+// Time slot selection animation
+function setupTimeSlotAnimations() {
+  document.querySelectorAll('.time-slot').forEach(slot => {
+    slot.addEventListener('click', function() {
+      // Remove selection from other slots
+      document.querySelectorAll('.time-slot').forEach(s => {
+        s.classList.remove('selected');
+        gsap.to(s, {
+          duration: 0.3,
+          scale: 1,
+          ease: 'power2.out'
+        });
+      });
+      
+      // Select this slot
+      this.classList.add('selected');
+      selectedTimeSlot = this.dataset.time;
+      
+      // Animate selection
+      gsap.to(this, {
+        duration: 0.3,
+        scale: 1.1,
+        ease: 'back.out(1.7)'
+      });
+      
+      // Pulse effect
+      gsap.to(this, {
+        duration: 0.2,
+        boxShadow: '0 0 20px rgba(0, 247, 255, 0.6)',
+        ease: 'power2.out',
+        yoyo: true,
+        repeat: 1
+      });
+    });
+  });
+}
+
+// Form submission animation
+function handleFormSubmission() {
+  const form = document.getElementById('bookingForm');
+  
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Animate submit button
+    const submitBtn = document.querySelector('.submit-btn');
+    
+    gsap.to(submitBtn, {
+      duration: 0.2,
+      scale: 0.95,
+      ease: 'power2.out',
+      onComplete: () => {
+        // Show loading state
+        submitBtn.innerHTML = '<i class="ri-loader-4-line"></i> Processing...';
+        
+        // Animate loading
+        gsap.to(submitBtn.querySelector('i'), {
+          duration: 1,
+          rotation: 360,
+          ease: 'none',
+          repeat: -1
+        });
+        
+        // Simulate processing time
+        setTimeout(() => {
+          showSuccessAnimation();
+        }, 2000);
+      }
+    });
+  });
+}
+
+// Success animation
+function showSuccessAnimation() {
+  closeBookingModal();
+  
+  const successEl = document.getElementById('successAnimation');
+  
+  // Show success animation
+  gsap.set(successEl, { opacity: 0, scale: 0 });
+  
+  gsap.to(successEl, {
+    duration: 0.5,
+    opacity: 1,
+    scale: 1,
+    ease: 'back.out(1.7)'
+  });
+  
+  // Animate success icon
+  gsap.from(successEl.querySelector('i'), {
+    duration: 0.8,
+    scale: 0,
+    rotation: 360,
+    ease: 'back.out(1.7)',
+    delay: 0.3
+  });
+  
+  // Auto hide after 3 seconds
+  setTimeout(() => {
+    gsap.to(successEl, {
+      duration: 0.5,
+      opacity: 0,
+      scale: 0,
+      ease: 'power2.in'
+    });
+  }, 3000);
+}
+
+// Create floating particles animation
+function createFloatingParticles() {
+  const container = document.querySelector('.animated-bg');
+  const particleCount = 20;
+  
+  for (let i = 0; i < particleCount; i++) {
+    const particle = document.createElement('div');
+    particle.classList.add('bg-particle');
+    
+    // Random positioning
+    gsap.set(particle, {
+      x: Math.random() * window.innerWidth,
+      y: Math.random() * window.innerHeight,
+      scale: Math.random() * 0.5 + 0.5
+    });
+    
+    container.appendChild(particle);
+    
+    // Animate particle
+    gsap.to(particle, {
+      duration: Math.random() * 10 + 10,
+      x: Math.random() * window.innerWidth,
+      y: Math.random() * window.innerHeight,
+      ease: 'none',
+      repeat: -1,
+      yoyo: true,
+      delay: Math.random() * 5
+    });
+    
+    // Floating animation
+    gsap.to(particle, {
+      duration: Math.random() * 3 + 2,
+      y: '+=50',
+      ease: 'power1.inOut',
+      repeat: -1,
+      yoyo: true,
+      delay: Math.random() * 2
+    });
+  }
+}
+
+// Profile image continuous animations
+function setupProfileImageAnimations() {
+  const profileImage = document.querySelector('.profile-image');
+  
+  // Subtle floating animation
+  gsap.to(profileImage, {
+    duration: 3,
+    y: -10,
+    ease: 'power1.inOut',
+    repeat: -1,
+    yoyo: true
+  });
+  
+  // Glow pulse effect
+  gsap.to(profileImage, {
+    duration: 2,
+    boxShadow: '0 0 30px rgba(0, 247, 255, 0.8)',
+    ease: 'power1.inOut',
+    repeat: -1,
+    yoyo: true
+  });
+}
+
+// Statistics counter animation
+function animateStatistics() {
+  const statValues = document.querySelectorAll('.stat-value');
+  
+  statValues.forEach(stat => {
+    const finalValue = stat.textContent;
+    const isNumber = !isNaN(parseInt(finalValue));
+    
+    if (isNumber) {
+      const endValue = parseInt(finalValue);
+      gsap.from({ value: 0 }, {
+        duration: 2,
+        value: endValue,
+        ease: 'power2.out',
+        delay: 1.8,
+        onUpdate: function() {
+          stat.textContent = Math.floor(this.targets()[0].value);
+        },
+        onComplete: () => {
+          stat.textContent = finalValue; // Restore original format
+        }
+      });
+    }
+  });
+}
+
+// Reset form function
+function resetForm() {
+  document.getElementById('bookingForm').reset();
+  selectedTimeSlot = null;
+  document.querySelectorAll('.time-slot').forEach(slot => {
+    slot.classList.remove('selected');
+  });
+}
+
+// Utility functions
+function goBack() {
+  // Animate page exit
+  gsap.to('body', {
+    duration: 0.5,
+    opacity: 0,
+    scale: 0.95,
+    ease: 'power2.in',
+    onComplete: () => {
+      // Navigate back (in real app, this would be actual navigation)
+      console.log('Navigating back to search results...');
+      // window.history.back();
+    }
+  });
+}
+
+// Setup all event listeners
+function setupEventListeners() {
+  // Time slot animations
+  setupTimeSlotAnimations();
+  
+  // Form submission
+  handleFormSubmission();
+  
+  // Profile image animations
+  setupProfileImageAnimations();
+  
+  // Statistics animation
+  animateStatistics();
+  
+  // Window resize handler for particles
+  window.addEventListener('resize', () => {
+    // Reposition particles on resize
+    document.querySelectorAll('.bg-particle').forEach(particle => {
+      gsap.set(particle, {
+        x: Math.random() * window.innerWidth,
+        y: Math.random() * window.innerHeight
+      });
+    });
+  });
+}
+
+// Text animation utility
+function animateText(element, delay = 0) {
+  const text = element.textContent;
+  element.textContent = '';
+  
+  text.split('').forEach((char, i) => {
+    const span = document.createElement('span');
+    span.textContent = char === ' ' ? '\u00A0' : char;
+    element.appendChild(span);
+    
+    gsap.from(span, {
+      duration: 0.5,
+      y: 50,
+      opacity: 0,
+      ease: 'back.out(1.7)',
+      delay: delay + (i * 0.05)
+    });
+  });
+}
+
+// Initialize text animations for titles
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => {
+    const titles = document.querySelectorAll('.section-title');
+    titles.forEach((title, i) => {
+      ScrollTrigger.create({
+        trigger: title,
+        start: 'top 80%',
+        onEnter: () => animateText(title, i * 0.2)
+      });
+    });
+  }, 1000);
+});
+</script>
